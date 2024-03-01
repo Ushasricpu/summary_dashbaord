@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+
+<head>
+  <link rel="icon" type="image/x-icon" href="{%static 'images/wisun-logo.png'%}" sizes="64x64" />
+  <title>Wi-Sun Smart City Research Center</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+    integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+    crossorigin="blue" />
+  <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+    integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+    crossorigin="blue"></script>
+  <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+    integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.bundle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@0.7.7"></script>
+  <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/graph.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/functions.js' %}"></script>
+
+  <script>
+    current_selected_vertical = "wn";
+    newloadData('{{result|safe}}');
+    var temp = {};
+    temp = wisun_nodes[0];
+    wisun_nodes[0] = wisun_nodes[4];
+    wisun_nodes[4] = temp;
+  </script>
+</head>
+<style>
+  html {
+    font-family: Helvetica;
+    display: inline-block;
+    margin: 0px auto;
+    text-align: center;
+  }
+
+  body {
+    margin-top: 50px;
+  }
+
+  h1 {
+    color: #444444;
+    margin: 50px auto 30px;
+  }
+
+  h3 {
+    color: #444444;
+    margin-bottom: 50px;
+  }
+
+  .popupCustom .leaflet-popup-tip,
+  .popupCustom .leaflet-popup-content-wrapper {
+    background: #fff8dc;
+    opacity: 0.75;
+    color: #234c5e;
+    border-radius: 2px;
+    transition: transform 2s ease-in-out;
+  }
+
+  .custom .leaflet-popup-close-button,
+  .custom .leaflet-popup-tip-container {
+    display: none;
+  }
+
+  .custom .leaflet-popup-content-wrapper,
+  .custom .leaflet-popup-tip {
+    background-color: transparent;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+  }
+
+  .custom .leaflet-popup-content {
+    font-size: 0.6rem;
+    color: Black;
+    font-style: italic;
+  }
+
+  .popupcontent {
+    font-weight: 500;
+  }
+
+  .headings {
+    color: #e2e8eb;
+    align-items: baseline;
+    display: flex;
+    align-items: baseline;
+  }
+
+  #legendActiveNodes {
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    border: 3px solid yellow;
+    margin-right: 12px;
+    background-color: blue;
+  }
+
+  :root {
+    --map-tiles-filter: brightness(0.6) invert(1) contrast(5) hue-rotate(200deg) saturate(0.3) brightness(0.7);
+  }
+
+  .map-tiles {
+    filter: var(--map-tiles-filter, none);
+  }
+
+  #infoPanel {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100px;
+  }
+
+  #infoPaneldiv {
+    margin-top: 10%;
+    border: 1px dashed rgb(175, 156, 156);
+    display: flex;
+    flex-direction: column;
+  }
+
+  #infoPaneldivInternal {
+    display: flex;
+    flex-direction: row;
+  }
+
+  @media screen and (min-width: 768px) {
+    #map {
+      position: relative;
+      height: 500px;
+      width: 95vw;
+      border: 2px solid rgb(58, 58, 63);
+      background-color: #28282b;
+    }
+
+    #panels {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    #leftPanels {
+      margin-top: 5%;
+      height: 300px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+    }
+
+    #rightPanels {
+      margin-top: 15%;
+      height: 300px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+    }
+
+    #navbar {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-bottom: 2px solid white;
+    }
+
+    #navbarLeft {
+      display: flex;
+      margin-left: 5%;
+    }
+
+    .sideImages {
+      width: 90px;
+      height: 60px;
+    }
+
+    #Title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #Title h1 {
+      font-size: 25px;
+    }
+
+    #Title img {
+      width: 80px;
+      height: 80px;
+    }
+
+    #centerPanels {
+      margin-top: -2%;
+    }
+
+    #siliconLablogo {
+      width: 70px;
+      height: 50px;
+    }
+  }
+
+  @media screen and (min-width: 1200px) and (max-width: 1600px) and (-webkit-min-device-pixel-ratio: 1) {
+    #map {
+      margin-top: 2%;
+      position: relative;
+      height: 650px;
+      width: 90vw;
+      border: 2px solid rgb(58, 58, 63);
+      background-color: #28282b;
+    }
+
+    #panels {
+      display: flex;
+      justify-content: space-around;
+      flex-direction: column;
+    }
+
+    #leftPanels {
+      margin-top: 5%;
+      width: 90vw;
+      height: 300px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+    }
+
+    #rightPanels {
+      width: 90vw;
+      margin-top: 5%;
+      height: 300px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+    }
+
+    #navbar {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    #navbarLeft {
+      display: flex;
+      margin-left: 5%;
+    }
+
+    .sideImages {
+      width: 120px;
+      height: 90px;
+    }
+
+    #Title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #Title h1 {
+      font-size: 40px;
+    }
+
+    #Title img {
+      width: 100px;
+      height: 100px;
+    }
+
+    #centerPanels {
+      margin-top: -2%;
+    }
+
+    .individualPanel {
+      width: 500px;
+      height: 250px;
+    }
+
+    #siliconLablogo {
+      width: 90px;
+      height: 60px;
+    }
+
+    #infoPaneldivInternal {
+      display: flex;
+      flex-direction: row;
+    }
+  }
+
+  @media screen and (min-width: 1680px) {
+    .statusdetails {
+      color: #e2e8eb;
+      font-size: 20px;
+    }
+
+    #navbar {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-left: -5%;
+      border-bottom: 2px solid white;
+      height: 10vh;
+    }
+
+    #Title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #Title h1 {
+      font-size: 40px;
+    }
+
+    #panels {
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    #leftPanels {
+      margin-top: 0px;
+      width: 35vw;
+      height: 600px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+    }
+
+    #centerPanels {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-top: 2%;
+    }
+
+    #rightPanels {
+      margin-top: 0px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      height: 600px;
+    }
+
+    #Title img {
+      width: 120px;
+      height: 90px;
+    }
+
+    #siliconLablogo {
+      width: 100px;
+      height: 70px;
+    }
+
+    #map {
+      position: relative;
+      height: 650px;
+      width: 1100px;
+      border: 2px solid rgb(58, 58, 63);
+      background-color: #28282b;
+    }
+
+    .sideImages {
+      width: 120px;
+      height: 90px;
+    }
+
+    .individualPanel {
+      width: 400px;
+      height: 200px;
+    }
+  }
+
+  .modal-lg {
+    width: 100%;
+    min-height: 100vh;
+  }
+</style>
+
+<body style="
+      background-color: #181b1f;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    ">
+  <div class="modal fade" style="padding-top: 80px" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitle">Graph</h5>
+          <button type="button" class="btn-close" id="graph-close-button" data-bs-dismiss="modal"
+            aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <canvas id="myChart" width="2500" height="1600"></canvas>
+          <div class="controls">
+            <p>
+              Parameter:
+              <select name="chartField" id="chartField" onchange="controlChangeCall()"></select>
+              Range:
+              <select name="range" id="range" onchange="controlChangeCall()">
+                <option value="day">Today</option>
+                <option value="week" selected>This week</option>
+                <option value="month">This month</option>
+                <option value="year">This year</option>
+                <option value="allTime">All Time</option>
+              </select>
+              Grouping:
+              <select name="interval" id="interval" onchange="controlChangeCall()">
+                <!-- <option value="minute">By minute</option>
+              <option value="hour" selected>By hour</option>
+              <option value="day">By day</option>
+              <option value="week">By week</option>
+              <option value="month">By month</option> -->
+              </select>
+              <select name="dataGrouping" id="dataGrouping" onchange="controlChangeCall()">
+                <option value="avg" selected>Average</option>
+                <option value="min">Minimum</option>
+                <option value="max">Maximum</option>
+                <option value="sum">Sum</option>
+              </select>
+            </p>
+            <p>
+              <select name="additionNode" id="additionNode"></select>
+              <button type="button" class="btn btn-primary" value="AddNode"
+                onclick="addNodeCall(current_selected_vertical.toUpperCase(), popupNode, 'addNode')">
+                Add Node
+              </button>
+              <select name="additionContext" id="additionContext">
+                <option value="avg" selected>Average</option>
+                <option value="min">Minimum</option>
+                <option value="max">Maximum</option>
+                <option value="sum">Sum</option>
+              </select>
+              <button type="button" class="btn btn-success" value="AddContext"
+                onclick="addContextCall(current_selected_vertical.toUpperCase(), popupNode, 'addNode')">
+                Add Context
+              </button>
+            </p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a id="downloadurl"></a>
+          <button type="button" class="btn btn-primary" onclick="return downloadJson();">
+            Save as JSON
+          </button>
+          <button type="button" class="btn btn-success" onclick="return downloadCsv();">
+            Save as CSV
+          </button>
+
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <section id="wisunDashboard">
+    <div id="navbar">
+      <div id="navbarLeft">
+        <a href="/home">
+          <img src="{% static 'images/iiit-h-removebg-preview.png'%}" class="sideImages" />
+          <img src="{% static 'images/my-image (1).png'%}" class="sideImages" /></a>
+      </div>
+      <div id="Title">
+        <img src="{%static 'images/wisun-logo.png'%}" id="wisunLogo" />
+        <h1 style="color: #e2e8eb">DEPLOYMENT DASHBOARD</h1>
+      </div>
+      <div id="navbarRight" style="
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+          ">
+        <img src="{%static 'images/logo-silabs.png'%}" id="siliconLablogo" />
+      </div>
+    </div>
+    <div id="panels">
+      <div id="leftPanels">
+        <div id="tempPanel">
+          <iframe src="https://smartcitylivinglab.iiit.ac.in/grafana/d-solo/kyLuJXQ7z/summary_view?orgId=1&panelId=38" width="400" height="200" frameborder="0"></iframe>
+        </div>
+        <div id="rssi">
+        	<iframe src="https://smartcitylivinglab.iiit.ac.in/grafana/d-solo/XBsPeHn4z/new-dashboard?orgId=1&panelId=4" width="400" height="200" frameborder="0"></iframe>
+        </div>
+      </div>
+      <div id="centerPanels">
+        <div id="map"></div>
+        <!-- <button type="button" class="btn btn-primary" onclick="turnOffAllLights()">
+          Turn Off All Lights
+        </button> -->
+      </div>
+      <div id="rightPanels">
+        <div>
+          <div id="relativeHumidity">
+            <iframe src="https://smartcitylivinglab.iiit.ac.in/grafana/d-solo/kyLuJXQ7z/summary_view?orgId=1&panelId=53" width="400" height="200" frameborder="0"></iframe>
+          </div>
+        </div>
+        <div>
+          <div id="latency">
+            <iframe src="https://smartcitylivinglab.iiit.ac.in/grafana/d-solo/XBsPeHn4z/new-dashboard?orgId=1&panelId=2" width="400" height="200" frameborder="0"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="infoPanel" style="margin-top: -3%">
+      <div id="infoPaneldiv">
+        <div id="infoPaneldivInternal">
+          <h1 class="headings">
+            <div style="
+                  height: 30px;
+                  width: 30px;
+                  border-radius: 50%;
+                  border: 2px solid yellow;
+                  margin-right: 12px;
+                  background-color: red;
+                "></div>
+            <div style="font-size: 30px">
+              No of Inactive Nodes&nbsp;:&nbsp;<span style="color: green" id="wisuncount">0</span>
+            </div>
+          </h1>
+          <h1 class="headings">
+            <div id="legendActiveNodes"></div>
+            <div style="font-size: 30px">
+              No of Active Nodes&nbsp;:&nbsp;<span style="color: green" id="activecount"></span>
+            </div>
+          </h1>
+          <h1 class="headings" style="display: flex; align-items: baseline">
+            <div style="
+                  height: 30px;
+                  width: 30px;
+                  border-radius: 50%;
+                  background-color: rgb(28, 201, 43);
+                  margin-right: 12px;
+                  border: 3px solid yellow;
+                "></div>
+            <div style="font-size: 30px">
+              No of Lights On&nbsp;:&nbsp;<span style="color: green" id="Lightoncount">0</span>
+            </div>
+          </h1>
+          <h1 class="headings" style="display: flex; align-items: baseline">
+            <!-- <div
+                style="height:30px;width:30px;border-radius:50%;background-color:rgb(31, 28, 216);margin-right:12px;">
+              </div> -->
+            <div style="font-size: 30px">
+              No of Lights Off&nbsp;:&nbsp;<span style="color: green" id="Lightoffcount">30</span>
+            </div>
+          </h1>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script>
+    //to trigger the graph
+
+    var lightoncount = 0;
+    var lightoffcount = 0;
+    var map = L.map("map").setView([17.445369, 78.349937], 18);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      minZoom: 17,
+      attribution: "© OpenStreetMap",
+      className: "map-tiles",
+    }).addTo(map);
+    nodes = [
+      [
+        "SmartPoll",
+        17.44507,
+        78.349856,
+        "WN-LP01-03",
+        ".LP01ON",
+        ".LP01OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "VindhyaA2(79E&79D)",
+        17.445146,
+        78.350022,
+        "WN-LP02-02",
+        ".LP02ON",
+        ".LP02OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "Vindhya A4 (79B&79C)",
+        17.445564,
+        78.349507,
+        "WN-LP04-02",
+        ".LP04ON",
+        ".LP04OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      // ["VindhyaA4(II)", 17.44564, 78.349392,"WN-LP04-02"],
+      [
+        "VindhyaA6(I)",
+        17.445802,
+        78.349192,
+        "WN-LP05-02",
+        ".LP05ON",
+        ".LP05OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "VindhyaA2-A4(79F)",
+        17.445343,
+        78.349779,
+        "WN-LP03-02",
+        ".LP03ON",
+        ".LP03OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      // ["VindhyaA6(II)", 17.445944, 78.349067,"WN-LP05-02"],
+
+      // ["VindhyaA2(II)", 17.445041, 78.350087,"WN-LP02-02"],
+      [
+        "Pole26",
+        17.44541,
+        78.350954,
+        "WN-LP06-01",
+        ".LP06ON",
+        ".LP06OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "Pole25",
+        17.445241,
+        78.350744,
+        "WN-LP07-01",
+        ".LP07ON",
+        ".LP07OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "Pole22",
+        17.445032,
+        78.350564,
+        "WN-LP08-01",
+        ".LP08ON",
+        ".LP08OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "Pole21",
+        17.444882,
+        78.35041,
+        "WN-LP09-01",
+        ".LP09ON",
+        ".LP09OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "Pole20",
+        17.444693,
+        78.350241,
+        "WN-LP10-01",
+        ".LP10ON",
+        ".LP10OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "Pole19",
+        17.444449,
+        78.350024,
+        "WN-LP11-01",
+        ".LP11ON",
+        ".LP11OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "Pole18",
+        17.444275,
+        78.349894,
+        "WN-LP12-01",
+        ".LP12ON",
+        ".LP12OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "Pole66",
+        17.444442,
+        78.349712,
+        "WN-LP13-01",
+        ".LP13ON",
+        ".LP13OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "Pole65",
+        17.444572,
+        78.34956,
+        "WN-LP14-01",
+        ".LP14ON",
+        ".LP14OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "Pole64",
+        17.444763,
+        78.349306,
+        "WN-LP15-01",
+        ".LP15ON",
+        ".LP15OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "Pole63",
+        17.444882,
+        78.349172,
+        "WN-LP16-01",
+        ".LP16ON",
+        ".LP16OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "Pole62",
+        17.445018,
+        78.348979,
+        "WN-LP17-01",
+        ".LP17ON",
+        ".LP17OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "Pole61",
+        17.445146,
+        78.348844,
+        "WN-LP18-01",
+        ".LP18ON",
+        ".LP18OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "Pole60",
+        17.445326,
+        78.348596,
+        "WN-LP19-01",
+        ".LP19ON",
+        ".LP19OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "Pole59",
+        17.445435,
+        78.348418,
+        "WN-LP20-01",
+        ".LP20ON",
+        ".LP20OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "Pole67",
+        17.445764,
+        78.348406,
+        "WN-LP21-01",
+        ".LP21ON",
+        ".LP21OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "Pole78",
+        17.445964,
+        78.348601,
+        "WN-LP22-01",
+        ".LP22ON",
+        ".LP22OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "Pole77",
+        17.446134,
+        78.348763,
+        "WN-LP23-01",
+        ".LP23ON",
+        ".LP23OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "Pole80",
+        17.446267,
+        78.348872,
+        "WN-LP24-01",
+        ".LP24ON",
+        ".LP24OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "Pole81",
+        17.446471,
+        78.349039,
+        "WN-LP25-01",
+        ".LP25ON",
+        ".LP25OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "Pole82",
+        17.446943,
+        78.349084,
+        "WN-LP26-01",
+        ".LP26ON",
+        ".LP26OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "Pole84",
+        17.446915,
+        78.349451,
+        "WN-LP28-01",
+        ".LP28ON",
+        ".LP28OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "Pole38",
+        17.446889,
+        78.349611,
+        "WN-LP29-01",
+        ".LP29ON",
+        ".LP29OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "Pole37",
+        17.44671,
+        78.349837,
+        "WN-LP30-01",
+        ".LP30ON",
+        ".LP30OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+      [
+        "Pole83",
+        17.446703,
+        78.349253,
+        "WN-LP27-01",
+        ".LP27ON",
+        ".LP27OFF",
+        "yellow",
+        1,
+        "blue",
+      ],
+    ];
+    var customOptions = { width: "600", className: "popupCustom" };
+    var customOptions2 = { className: "custom", offset: [5, 62] };
+    console.log(nodes.length);
+    var activeNodeCount = 0;
+    // for (let i = 0; i < nodes.length; i++) {
+    //   $.ajax({
+    //     url: `get/ack/${nodes[i][3]}`,
+    //     method: "GET",
+    //     contentType: "application/json",
+    //     success: function (data) {
+    //       data = data.split(" ")
+    //       if (data[2] == "on") {
+    //         nodes[i][8] = "green"
+    //       }
+    //       else if (data[2] == "off") {
+    //         nodes[i][8] = "blue"
+    //       }
+    //     },
+    //     error: function (data) {
+    //       console.log(data)
+    //     }
+    //   })
+    // }
+    for (let i = 0; i < nodes.length; i++) {
+      var content =
+        `<div style="display:flex;flex-direction:column;width:200px;height:fit-content" data-bs-toggle="modal" data-bs-target="#myModal" onclick="PopupContent('` +
+        nodes[i][3] +
+        `')"><div><strong style="font-size:20px;">${nodes[i][0]}</strong></div><div class="popupcontent"><strong>NodeID:&nbsp;${nodes[i][3]}</strong></div><div class="popupcontent"><strong>RSSI:&nbsp;${wisun_nodes[i].rssi}dB</strong></div><div class="popupcontent"><strong>Latency:&nbsp;${wisun_nodes[i].latency}ms</strong></div></div>`;
+      let popup = L.popup({
+        closeOnclick: false,
+        autoClose: false,
+      }).setContent(nodes[i][0]);
+      let popup2 = L.popup({
+        closeOnclick: false,
+        autoClose: true,
+      }).setContent(content);
+      // labelCircle = L.circle([nodes[i][1], nodes[i][2]], {
+      //   color: "#orange",
+      //   fillColor: "#FFA500",
+      //   fillOpacity: 0.0,
+      //   radius: 4.0,
+      //   offset: L.point(100, -500),
+      // })
+      // .bindPopup(popup, customOptions2)
+      // .addTo(map)
+      // .openPopup();
+      circle = new L.circle([nodes[i][1], nodes[i][2]], {
+        color: nodes[i][6],
+        fillColor: nodes[i][8],
+        fillOpacity: 0.7,
+        radius: 5,
+      })
+        .bindPopup(popup2, customOptions)
+        .addTo(map)
+        .openPopup();
+      circle.on("mouseover", function (e) {
+        this.openPopup();
+      });
+      let flag = 0;
+      circle.on("click", function (e) {
+        // if (!flag) {
+        //   // this.setStyle({ fillColor: "green" });
+        //   On(i, this);
+        //   flag = 1;
+        // } else {
+        //   // this.setStyle({ fillColor: "blue" });
+        //   Off(i, this);
+        //   flag = 0;
+        // }
+        ToggleNode(i, this);
+      });
+      if (nodes[i][8] === "blue") activeNodeCount++;
+      nodes[i].push(circle);
+      // circle.on('dblclick',function(e){
+      //   // test()
+      //   test1(i)
+      //   this.setStyle({fillColor:"lightyellow"})
+      // })
+    }
+    document.getElementById("activecount").innerHTML = activeNodeCount;
+    for (let i = 0; i < nodes.length; i++) {
+      $.ajax({
+        url: `get/ack/${nodes[i][3]}`,
+        method: "GET",
+        type: "application/json",
+        success: function (data) {
+          data = data.split(" ");
+          if (data[2] == "on") {
+            nodes[i][9].setStyle({ fillColor: "green" }),
+              (lightoncount += nodes[i][7]);
+            // lightoffcount -= nodes[i][7]
+            document.getElementById("Lightoncount").innerHTML = lightoncount;
+            document.getElementById("Lightoffcount").innerHTML =
+              lightoffcount;
+          } else if (data[2] == "off") {
+            nodes[i][9].setStyle({ fillColor: "blue" }),
+              // lightoncount -= nodes[i][7]
+              (lightoffcount += nodes[i][7]);
+            document.getElementById("Lightoncount").innerHTML = lightoncount;
+            document.getElementById("Lightoffcount").innerHTML =
+              lightoffcount;
+          }
+        },
+      });
+    }
+  </script>
+  <script>
+    function turnOn(index, circle) {
+      $.ajax({
+        url: `switch/on/${nodes[index][3]}/${nodes[index][4]}`,
+        method: "POST",
+        contentType: "application/json",
+        success: function (data) {
+          if (data == "201" || data == "200") {
+            circle.setStyle({ fillColor: "green" });
+          }
+        },
+      });
+      lightoncount += nodes[index][7];
+      lightoffcount -= nodes[index][7];
+      document.getElementById("Lightoncount").innerHTML = lightoncount;
+      document.getElementById("Lightoffcount").innerHTML = lightoffcount;
+    }
+    function turnOff(index, circle) {
+      $.ajax({
+        url: `switch/off/${nodes[index][3]}/${nodes[index][5]}`,
+        method: "POST",
+        contentType: "application/json",
+        success: function (data) {
+          if (data == "201" || data == "200") {
+            circle.setStyle({ fillColor: "blue" });
+          }
+        },
+      });
+      lightoffcount += nodes[index][7];
+      lightoncount -= nodes[index][7];
+      document.getElementById("Lightoncount").innerHTML = lightoncount;
+      document.getElementById("Lightoffcount").innerHTML = lightoffcount;
+    }
+    function ToggleNode(index, circle) {
+      $.ajax({
+        url: `get/ack/${nodes[index][3]}`,
+        method: "GET",
+        contentType: "application/json",
+        success: function (data) {
+          data = data.split(" ");
+          if (data[2] == "off" && circle.options["fillColor"] == "blue") {
+            turnOn(index, circle);
+          } else if (
+            data[2] == "on" &&
+            circle.options["fillColor"] == "green"
+          ) {
+            turnOff(index, circle);
+          }
+        },
+      });
+    }
+    // function Off(index, circle) {
+    //   $.ajax({
+    //     url: `get/ack/${nodes[index][3]}`,
+    //     method: "GET",
+    //     contentType: "application/json",
+    //     success: function (data) {
+    //       data = data.split(" ")
+    //       if (data[2] == "off") {
+    //         circle.setStyle({ fillColor: "blue" })
+    //         lightoncount -= nodes[index][7]
+    //         lightoffcount += nodes[index][7]
+    //         document.getElementById("Lightoncount").innerHTML = lightoncount;
+    //         document.getElementById("Lightoffcount").innerHTML = lightoffcount;
+    //       } else if (data[2] == "on") {
+    //         $.ajax({
+    //           url: `switch/off/${nodes[index][3]}/${nodes[index][5]}`,
+    //           method: "POST",
+    //           contentType: "application/json",
+    //           success: function (data) {
+    //             if (data == "201") {
+    //               circle.setStyle({ fillColor: "blue" })
+    //               lightoncount -= nodes[index][7]
+    //               lightoffcount += nodes[index][7]
+    //               document.getElementById("Lightoncount").innerHTML = lightoncount;
+    //               document.getElementById("Lightoffcount").innerHTML = lightoffcount;
+    //             }
+    //           }
+    //         });
+    //       }
+    //     }
+    //   })
+    // }
+    // function On(index, circle) {
+    //   $.ajax({
+    //     url: `get/ack/${nodes[index][3]}`,
+    //     method: "GET",
+    //     contentType: "application/json",
+    //     success: function (data) {
+    //       data = data.split(" ")
+    //       if (data[2] === "on") {
+    //         circle.setStyle({ fillColor: "green" })
+    //         lightoncount += nodes[index][7]
+    //         lightoffcount -= nodes[index][7]
+    //         document.getElementById("Lightoncount").innerHTML = lightoncount
+    //         document.getElementById("Lightoffcount").innerHTML = lightoffcount;
+    //       } else if (data[2] === "off") {
+    //         $.ajax({
+    //           url: `switch/on/${nodes[index][3]}/${nodes[index][4]}`,
+    //           method: "POST",
+    //           contentType: "application/json",
+    //           success: function (data) {
+    //             if (data == "201") {
+    //               circle.setStyle({ fillColor: "green" })
+    //               lightoncount += nodes[index][7]
+    //               lightoffcount -= nodes[index][7]
+    //               document.getElementById("Lightoncount").innerHTML = lightoncount
+    //               document.getElementById("Lightoffcount").innerHTML = lightoffcount;
+    //             }
+    //           }
+    //         });
+    //       }
+    //     }
+    //   })
+    // }
+    function PopupContent(x) {
+      popupClick("WN", x);
+    }
+  </script>
+  <script>
+    function activateAllNodes() {
+      lightoncount = 0;
+      lightoffcount = 0;
+      for (let i = 0; i < nodes.length; i++) {
+        console.log(nodes[i][9]);
+        $.ajax({
+          url: `get/ack/${nodes[i][3]}`,
+          method: "GET",
+          contentType: "application/json",
+          success: function (data) {
+            data = data.split(" ");
+            if (data[2] == "on") {
+              nodes[i][9].setStyle({ fillColor: "green" });
+              lightoncount += nodes[i][7];
+              // lightoffcount -= nodes[i][7]
+              document.getElementById("Lightoncount").innerHTML =
+                lightoncount;
+              // document.getElementById("Lightoffcount").innerHTML = lightoffcount;
+            } else if (data[2] == "off") {
+              $.ajax({
+                url: `switch/on/${nodes[i][3]}/${nodes[i][4]}`,
+                method: "POST",
+                contentType: "application/json",
+                success: function (data) {
+                  if (data == "201") {
+                    nodes[i][9].setStyle({ fillColor: "green" });
+                    // lightoncount += nodes[i][7]
+                    lightoffcount += nodes[i][7];
+                    // document.getElementById("Lightoncount").innerHTML = lightoncount
+                    document.getElementById("Lightoffcount").innerHTML =
+                      lightoffcount;
+                  }
+                },
+              });
+            }
+          },
+        });
+      }
+    }
+    function turnOffAllLights() {
+      for (let i = 0; i < nodes.length; i++) {
+        console.log(nodes[i][9]);
+        $.ajax({
+          url: `get/ack/${nodes[i][3]}`,
+          method: "GET",
+          contentType: "application/json",
+          success: function (data) {
+            data = data.split(" ");
+            if (data[2] == "off") {
+              nodes[i][9].setStyle({ fillColor: "green" });
+              // lightoncount += nodes[i][7]
+              lightoffcount += nodes[i][7];
+              // document.getElementById("Lightoncount").innerHTML = lightoncount
+              document.getElementById("Lightoffcount").innerHTML =
+                lightoffcount;
+            } else if (data[2] == "on") {
+              $.ajax({
+                url: `switch/off/${nodes[i][3]}/${nodes[i][5]}`,
+                method: "POST",
+                contentType: "application/json",
+                success: function (data) {
+                  if (data == "201") {
+                    nodes[i][9].setStyle({ fillColor: "blue" });
+                    // lightoncount += nodes[i][7]
+                    lightoffcount += nodes[i][7];
+                    // document.getElementById("Lightoncount").innerHTML = lightoncount
+                    document.getElementById("Lightoffcount").innerHTML =
+                      lightoffcount;
+                  }
+                },
+              });
+            }
+          },
+        });
+      }
+    }
+  </script>
+</body>
+
+</html>

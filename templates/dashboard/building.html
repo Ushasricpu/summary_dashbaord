@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html>
+
+{% load static %}
+{% load leaflet_tags %}
+<head>
+    <title>SCRC Dashboard</title>
+    <meta name="viewport" content="width=device-width, user-scalable=false,">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <link rel="icon" href="{% static 'images/smartCity_livingLab.png' %}">
+
+    <link rel="stylesheet" href=" {% static 'css/bootstrap.min.css' %} ">
+    <link rel="stylesheet" type="text/css" href="{% static 'fontawesome/css/all.min.css' %}" />
+    <link rel="stylesheet" href=" {% static 'css/style.css' %} ">
+    {% leaflet_css %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+     <link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+
+
+    {% leaflet_js %}
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="{% static 'js/mapmodification.js'%}"></script>
+    <script src="{% static 'js/dropdown.js'%}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.bundle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@0.7.7"></script>
+    <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/graph.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/functions.js' %}"></script>
+    <script src="{% static 'js/marker_icons.js'%}"></script>
+
+    <script>
+
+        var mapIconPath = " {% static 'images/icon/'%}";
+        // newloadData('{{aq|safe}}',
+         //'{{wf|safe}}',
+         //'{{wd|safe}}');
+        newloadData('{{result|safe}}');
+
+
+    </script>
+
+    <style>
+
+
+/* css to customize Leaflet default styles  */
+.popupCustom .leaflet-popup-tip,
+.popupCustom .leaflet-popup-content-wrapper {
+    background: #FFF8DC;
+    opacity: 0.85;
+    color: #234c5e;
+    border-radius: 2px;
+    transition: transform 2s ease-in-out;
+
+}
+
+
+
+.custom .leaflet-popup-close-button,
+  .custom .leaflet-popup-tip-container {
+    display: none;
+  }
+
+  .custom .leaflet-popup-content-wrapper,
+  .custom .leaflet-popup-tip {
+    background-color: transparent;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+
+  }
+
+  .custom .leaflet-popup-content {
+    font-size: 0.6rem;
+    color: Black;
+    font-style: italic;
+  }
+
+/*.dropdown-submenu {*/
+/*  position: relative;*/
+/*}*/
+
+/*.dropdown-submenu .dropdown-menu {*/
+/*  top: 0;*/
+/*  left: 100%;*/
+/*  margin-top: -1px;*/
+/*}*/
+
+
+.subnav {
+  padding-left:10px;
+  padding-right:7px;
+  float: left;
+  overflow: hidden;
+}
+
+.subnav .subnavbtn {
+  border: none;
+  outline: none;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
+}
+
+
+.subnav-content {
+  display: none;
+  position: absolute;
+  top: 85%;
+  left: 97%;
+  margin-top: -1px;
+  width: 100%;
+  background-color: #ffffff;
+  z-index: 1;
+}
+
+.subnav-content a {
+  float: left;
+  text-decoration: none;
+}
+
+.subnav-content a:hover {
+  background-color: light grey;
+  color: black;
+}
+
+.subnav:hover .subnav-content {
+  display: block;
+
+
+}
+
+.snav {
+  padding-left:10px;
+  padding-right:70px;
+  float: left;
+  overflow: hidden;
+}
+
+.snav .snavbtn {
+  border: none;
+  outline: none;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
+}
+
+
+.snav-content {
+  display: none;
+  position: absolute;
+  top: 40%;
+  left: 100%;
+  margin-top: -1px;
+  width: 100%;
+  background-color: #ffffff;
+  z-index: 1;
+}
+
+.snav-content a {
+  float: left;
+  text-decoration: none;
+}
+
+.snav-content a:hover {
+  background-color: light grey;
+  color: black;
+}
+
+.snav:hover .snav-content {
+  display: block;
+
+
+}
+.flex-container {
+    display: flex;
+}
+
+.flex-child {
+    flex: 2;
+    width: 90px;
+  height: 40px;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+
+.link {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 1;
+      }
+
+.scroll {
+    float:left;
+    width:200px;
+    overflow-y: auto;
+    height: 100px;
+}
+
+.legend {
+  float: right;
+  width: 100%;
+  padding: 0;
+  margin-bottom: 0.5rem;
+  font-size: calc(1.275rem + 0.3vw);
+  line-height: inherit;
+}
+.align-middle {
+  vertical-align: middle !important;
+}
+@media (min-width: 1200px) {
+  legend {
+    font-size: 1.5rem;
+  }
+}
+legend + * {
+  clear: right;
+}
+
+</style>
+    	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+		}
+		#map {
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+    <script src="{% static 'js/mapmodification.js'%}"></script>
+    <script src="{% static 'js/marker_icons.js'%}"></script>
+<!--    <script>-->
+<!--        function flush() {-->
+<!--            $("#parameterbody").empty();-->
+<!--        }-->
+<!--    </script>-->
+</head>
+
+<body style="overflow-x:hidden ;">
+    <nav class="navbar navbar-expand-md navbar-dark" style="  width: 100%;  z-index: 9999; position: relative; background-color: #123462; color: #ffffff; padding: 1vh;">
+        <div class="container-fluid">
+            <a class="navbar-brand " href="/home" style="color: #ffffff; padding-left:10px;">
+                <div style='display:flex'>
+                    <img src="{% static 'images/smartCity_livingLab.png' %}" height="50" border: 10px;>
+                    <h2 id = "title" style='margin-left:1vw'>
+                        Dashboard
+                    </h2>
+                </div>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon" ></span>
+            </button>
+
+<script>
+function myParamsFunction(original_vertical) {
+    // order important
+    document.getElementById("param"+current_selected_vertical+"KeysDiv").style.display = "none";
+    if(original_vertical == "aq") {
+        document.getElementById("paramaqKeysDiv").style.display = "block";
+        current_selected_vertical = "aq";
+    } else if(original_vertical == "wd") {
+        document.getElementById("paramwdKeysDiv").style.display = "block";
+        current_selected_vertical = "wd";
+    } else if(original_vertical == "wf") {
+        document.getElementById("paramwfKeysDiv").style.display = "block";
+        current_selected_vertical = "wf";
+    } else if(original_vertical == "we") {
+        document.getElementById("paramweKeysDiv").style.display = "block";
+        current_selected_vertical = "we";
+    } else if(original_vertical == "sl") {
+        document.getElementById("paramslKeysDiv").style.display = "block";
+        current_selected_vertical = "sl";
+    } else if(original_vertical == "em") {
+        document.getElementById("paramemKeysDiv").style.display = "block";
+        current_selected_vertical = "em";
+    } else if(original_vertical == "cm") {
+        document.getElementById("paramcmKeysDiv").style.display = "block";
+        current_selected_vertical = "cm";
+    } else if(original_vertical == "sraq") {
+        document.getElementById("paramsraqKeysDiv").style.display = "block";
+        current_selected_vertical = "sraq";
+    } else if(original_vertical == "srac") {
+        document.getElementById("paramsracKeysDiv").style.display = "block";
+        current_selected_vertical = "srac";
+    } else if(original_vertical == "sroc") {
+        document.getElementById("paramsrocKeysDiv").style.display = "block";
+        current_selected_vertical = "sroc";
+    } else if(original_vertical == "srem") {
+        document.getElementById("paramsremKeysDiv").style.display = "block";
+        current_selected_vertical = "srem";
+    }
+  // var x = document.getElementById("paramaqKeysDiv");
+  // if (x.style.display === "none") {
+    // x.style.display = "block";
+  // } else {
+    // x.style.display = "none";
+  // }
+}
+
+</script>
+
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav" >
+                <ul class = "navbar-nav">
+                    <li class="nav-item dropdown btnstyle">
+                        <a class="nav-link dropdown-toggle" href="#" id="currentvertical" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            AIR QUALITY
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink" id="listofcurrentvertical">
+
+                                <a class="dropdown-item"  id="air_quality" >AIR QUALITY</a>
+                                <a class="dropdown-item"  id="water_flow" >WATER FLOW</a>
+                                <a class="dropdown-item"  id="water_distribution">WATER DISTRIBUTION</a>
+                            <div class="snav">
+                            <button class="snavbtn" id="currentsr" href="#">SMART ROOM <span class="caret"></span> </button>
+                            <div class="snav-content" id="listofsr">
+
+
+                                     <a class="dropdown-item" id="sr_ac" href="#">SR-AC</a>
+                                    <a  class="dropdown-item" id="sr_em" href="#">SR-EM</a>
+                                    <a class="dropdown-item" id="sr_oc" href="#">SR-OC</a>
+                                    <a class="dropdown-item" id="sr_aq" href="#">SR-AQ</a>
+                            </div>
+                            </div>
+                            <a class="dropdown-item"  id="crowd-monitoring">CROWD MONITORING</a>
+                            <a class="dropdown-item"  id="WeatherStation">WEATHER STATION</a>
+                            <a class="dropdown-item"  href="https://smartcitylivinglab.iiit.ac.in/wisun_dashboard">SMART LAMP POST</a>
+                            <div class="subnav">
+                            <button class="subnavbtn" id="currentem" href="#"> ENERGY MONITORING <span class="caret"></span> </button>
+                            <div class="subnav-content" id="listofem">
+
+
+                                     <a class="dropdown-item" id="Solar" href="#">SOLAR</a>
+                                    <a  class="dropdown-item" id="energy-monitoring" href="#">CONVENTIONAL</a>
+
+                            </div>
+                            </div>
+
+
+
+
+                        </div>
+                    </li>
+<!--                    <li class="nav-item dropdown btnstyle"><div>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<input type="text" class="displaypar" style="color: #A9A9A9; background-color: #123462;" id="show" name="checkair"></div></li>-->
+<!--                    parameters start-->
+
+                    <li id="list1" class="nav-item dropdown btnstyle" tabindex="100">
+                        <a class="nav-link dropdown-toggle" href="#" id="currentparametertype" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span id="parameterbody"><img src="{% static 'images/icon/air/air1_v2.png' %}" width="20", height=20> <span style="color:grey"">PM25 </span>&nbsp<img src="{% static 'images/icon/air/air2_v2.png' %}" width="20", height=20> <span style="color:grey">PM10 </span>&nbsp<img src="{% static 'images/icon/air/air3_v2.png' %}" width="20", height=20> <span style="color:grey"">Temp </span>&nbsp<img src="{% static 'images/icon/air/air4_v2.png' %}" width="20", height=20> <span style="color:grey"">rHum </span>&nbsp </span>
+                        </a>
+
+<!--                        <div id="parameterbody2"></div>-->
+<!--                        <div id="parameterbody3"></div>-->
+<!--                        <div id="parameterbody4"></div>-->
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink" id="listofparameters">
+
+                        <div id="paramaqKeysDiv">
+                        <a class="dropdown-item" ><input type="checkbox" id="aq_1" name="checkair" onClick="reInitParameters('checkair',air_quality_nodes,'AQ');" value="PM25"/>  PM 25 </a>
+                        <a class="dropdown-item" ><input type="checkbox" id="aq_2" name="checkair" onClick="reInitParameters('checkair',air_quality_nodes,'AQ');" value="PM10"/>  PM 10 </a>
+                        <a class="dropdown-item" ><input type="checkbox" id="aq_3" name="checkair" onClick="reInitParameters('checkair',air_quality_nodes,'AQ');" value="TEMP"/>  TEMP </a>
+                        <a class="dropdown-item" ><input type="checkbox" id="aq_4" name="checkair"  onClick="reInitParameters('checkair',air_quality_nodes,'AQ');" value="RELHUM"/>  REL HUM </a>
+                        <a class="dropdown-item" ><input type="checkbox" id="aq_5" name="checkair" onClick="reInitParameters('checkair',air_quality_nodes,'AQ');" value="CO"/>  CO </a>
+                        <a class="dropdown-item" ><input type="checkbox" id="aq_6" name="checkair" onClick="reInitParameters('checkair',air_quality_nodes,'AQ');" value="NO2"/>  NO2 </a>
+                        <a class="dropdown-item" ><input type="checkbox" id="aq_7" name="checkair" onClick="reInitParameters('checkair',air_quality_nodes,'AQ');" value="NH3"/>  NH3 </a>
+                        <a class="dropdown-item" ><input type="checkbox" id="aq_8" name="checkair" onClick="reInitParameters('checkair',air_quality_nodes,'AQ');" value="AQI"/>  AQI </a>
+                        <a class="dropdown-item" ><input type="checkbox" id="aq_9" name="checkair" onClick="reInitParameters('checkair',air_quality_nodes,'AQ');" value="AQL"/>  AQL </a>
+                        <a class="dropdown-item" ><input type="checkbox" id="aq_10" name="checkair" onClick="reInitParameters('checkair',air_quality_nodes,'AQ');" value="AQIMP"/>  AQI MP </a>
+                        </div>
+                             <div id="paramwdKeysDiv" style="display:none">
+                        <a class="dropdown-item"><input type="checkbox" id="wd_1" name="checkwd" onClick="reInitParameters('checkwd',water_distribution_nodes,'WD');" value="WD_TEMP"/>  TEMP </a>
+                        <a class="dropdown-item"><input type="checkbox" id="wd_2" name="checkwd" onClick="reInitParameters('checkwd',water_distribution_nodes,'WD');" value="TDS" /> TDS  </a>
+                        <a class="dropdown-item"><input type="checkbox" id="wd_3" name="checkwd" onClick="reInitParameters('checkwd',water_distribution_nodes,'WD');" value="WTR_LVL" />  WATER LEVEL </a>
+                        <a class="dropdown-item"><input type="checkbox" id="wd_4" name="checkwd" onClick="reInitParameters('checkwd',water_distribution_nodes,'WD');" value="PH" />  PH </a>
+                        <a class="dropdown-item"><input type="checkbox" id="wd_5" name="checkwd" onClick="reInitParameters('checkwd',water_distribution_nodes,'WD');" value="TUR" />  TURBIDITY </a>
+                        </div>
+                            <div id="paramwfKeysDiv" style="display:none">
+                        <a class="dropdown-item"><input type="checkbox" id="wf_1" name="checkwf" onClick="reInitParameters('checkwf',water_flow_nodes,'WF');" value="FLO_RT"/>  FLOW RATE </a>
+                        <a class="dropdown-item"><input type="checkbox" id="wf_2" name="checkwf" onClick="reInitParameters('checkwf',water_flow_nodes,'WF');" value="TTL_FLO"/> TOTAL FLOW  </a>
+                        <a class="dropdown-item"><input type="checkbox" id="wf_3" name="checkwf" onClick="reInitParameters('checkwf',water_flow_nodes,'WF');" value="WF_PRESS"/>  PRESSURE </a>
+                        <a class="dropdown-item"><input type="checkbox" id="wf_4" name="checkwf" onClick="reInitParameters('checkwf',water_flow_nodes,'WF');" value="PRESS_V"/>  PRESSURE VOLT </a>
+                        </div>
+                            <div id="paramweKeysDiv" style="display:none">
+                        <a class="dropdown-item"><input type="checkbox" id="we_1" name="checkwe" onClick="reInitParameters('checkwe',weather_station_nodes,'WE');" value="SOL_RAD" /> SOLAR RAD  </a>
+                        <a class="dropdown-item"><input type="checkbox" id="we_2" name="checkwe" onClick="reInitParameters('checkwe',weather_station_nodes,'WE');" value="WE_TEMP"/>  TEMP </a>
+                        <a class="dropdown-item" id="we_relhumid"><input type="checkbox" id="we_3" name="checkwe" onClick="reInitParameters('checkwe',weather_station_nodes,'WE');" value="WE_RHUM"/>  REL HUM </a>
+                        <a class="dropdown-item" id="wind_direction"><input type="checkbox" id="we_4" name="checkwe" onClick="reInitParameters('checkwe',weather_station_nodes,'WE');" value="WIND_DIR"/>  WIND DIR </a>
+                        <a class="dropdown-item" id="wind_speed"><input type="checkbox" id="we_5" name="checkwe" onClick="reInitParameters('checkwe',weather_station_nodes,'WE');" value="WIND_SP"/>  WIND SPEED </a>
+                        <a class="dropdown-item" id="gust_speed"><input type="checkbox" id="we_6" name="checkwe" onClick="reInitParameters('checkwe',weather_station_nodes,'WE');" value="GUST" />  GUST SPEED </a>
+                        <a class="dropdown-item" id="dew_point"><input type="checkbox" id="we_7" name="checkwe" onClick="reInitParameters('checkwe',weather_station_nodes,'WE');" value="DEW"/>  DEW POINT </a>
+                        <a class="dropdown-item" id="battery_dc_voltage"><input type="checkbox" id="we_8" name="checkwe" onClick="reInitParameters('checkwe',weather_station_nodes,'WE');" value="DC_VLT"/>  BATT DC VOLT </a>
+                        <a class="dropdown-item" id="rain"><input type="checkbox" id="we_9" name="checkwe" onClick="reInitParameters('checkwe',weather_station_nodes,'WE');" value="RAIN"/>  RAIN </a>
+                        <a class="dropdown-item" id="we_pressure"><input type="checkbox" id="we_10" name="checkwe" onClick="reInitParameters('checkwe',weather_station_nodes,'WE');" value="WE_PRESS"/>  PRESS </a>
+                        </div>
+                        <div id="paramsracKeysDiv" style="display:none">
+                        <a class="dropdown-item" id="room_temp"><input type="checkbox" id="srac_1" name="checksrac" onClick="reInitParameters('checksrac',srac_nodes,'SR-AC');" value="SR_TEMP"/> ROOM TEMP  </a>
+                        <a class="dropdown-item" id="temp_adjust"><input type="checkbox" id="srac_2" name="checksrac" onClick="reInitParameters('checksrac',srac_nodes,'SR-AC');" value="TEMP_ADJ"/>  TEMP ADJ </a>
+                        <a class="dropdown-item" id="start_stop_status"><input type="checkbox"  id="srac_3" name="checksrac" onClick="reInitParameters('checksrac',srac_nodes,'SR-AC');" value="STA_STP"/>  START STOP </a>
+                        <a class="dropdown-item" id="alarm"><input type="checkbox" id="srac_4" name="checksrac" onClick="reInitParameters('checksrac',srac_nodes,'SR-AC');" value="ALM" />  ALARM </a>
+                        <a class="dropdown-item" id="malfunction_code"><input type="checkbox" id="srac_5" name="checksrac" onClick="reInitParameters('checksrac',srac_nodes,'SR-AC');" value="MAL"/>  MAL CODE </a>
+                        <a class="dropdown-item" id="air_con_mode_status"><input type="checkbox" id="srac_6" name="checksrac" onClick="reInitParameters('checksrac',srac_nodes,'SR-AC');" value="AC"/>  AIR CON MOD </a>
+                        <a class="dropdown-item" id="air_flow_rate_status"><input type="checkbox" id="srac_7" name="checksrac" onClick="reInitParameters('checksrac',srac_nodes,'SR-AC');" value="AR_FLORT"/>  AIR FLO RATE </a>
+                        <a class="dropdown-item" id="filter_sign"><input type="checkbox" id="srac_8" name="checksrac" onClick="reInitParameters('checksrac',srac_nodes,'SR-AC');" value="FLTR" />  FILTER SGN </a>
+                        <a class="dropdown-item" id="gas_total_power"><input type="checkbox" id="srac_9" name="checksrac" onClick="reInitParameters('checksrac',srac_nodes,'SR-AC');" value="GAS" />  GAS TOTAL PWR  </a>
+                        <a class="dropdown-item" id="elec_total_power"><input type="checkbox" id="srac_10" name="checksrac" onClick="reInitParameters('checksrac',srac_nodes,'SR-AC');" value="ELEC" />  ELEC TOTAL PWR </a>
+                        <a class="dropdown-item" id="air_direction_status"><input type="checkbox" id="srac_11" name="checksrac" onClick="reInitParameters('checksrac',srac_nodes,'SR-AC');" value="AIR_DIR"/>  AIR DIR </a>
+                        <a class="dropdown-item" id="forced_thermo_off_status"><input type="checkbox" id="srac_12" name="checksrac" onClick="reInitParameters('checksrac',srac_nodes,'SR-AC');" value="THRM"/>  FORCED THERMO </a>
+                        <a class="dropdown-item" id="energy_efficiency_status"><input type="checkbox" id="srac_13" name="checksrac" onClick="reInitParameters('checksrac',srac_nodes,'SR-AC');" value="EFF"/>  ENERGY EFF  </a>
+                        <a class="dropdown-item" id="compressor_status"><input type="checkbox" id="srac_14" name="checksrac" onClick="reInitParameters('checksrac',srac_nodes,'SR-AC');" value="COMP"/>  COMPRESSOR </a>
+                        <a class="dropdown-item" id="indoor_fan_status"><input type="checkbox" id="srac_15" name="checksrac" onClick="reInitParameters('checksrac',srac_nodes,'SR-AC');" value="FAN" />  INDOOR FAN  </a>
+                        <a class="dropdown-item" id="heater_status"><input type="checkbox" id="srac_16" name="checksrac" onClick="reInitParameters('checksrac',srac_nodes,'SR-AC');" value="HEAT"/>  HEATER </a>
+                        </div>
+                         <div id="paramsremKeysDiv" style="display:none">
+                        <a class="dropdown-item" id="energy"><input type="checkbox" id="srem_1" name="checksrem" onClick="reInitParameters('checksrem' ,srem_nodes, 'SR-EM');" value="EM_ENG" /> ENERGY  </a>
+                        <a class="dropdown-item" id="power"><input type="checkbox" id="srem_2" name="checksrem" onClick="reInitParameters('checksrem' ,srem_nodes, 'SR-EM');" value="EM_PWR"/>  POWER </a>
+                        <a class="dropdown-item" id="current"><input type="checkbox" id="srem_3" name="checksrem" onClick="reInitParameters('checksrem' ,srem_nodes, 'SR-EM');" value="EM_CURR"/>  CURRENT </a>
+                        </div>
+                         <div id="paramsraqKeysDiv" style="display:none">
+                        <a class="dropdown-item" id="sraq_co2"><input type="checkbox" id="sraq_1" name="checksraq" onClick="reInitParameters('checksraq',sraq_nodes,'SR-AQ');" value="CO2" /> CO2  </a>
+                        <a class="dropdown-item" id="aq_temp"><input type="checkbox" id="sraq_2" name="checksraq" onClick="reInitParameters('checksraq',sraq_nodes,'SR-AQ');" value="AQ_TEMP" />  TEMP </a>
+                        <a class="dropdown-item" id="aq_relhum"><input type="checkbox" id="sraq_3" name="checksraq" onClick="reInitParameters('checksraq',sraq_nodes,'SR-AQ');" value="AQ_RHUM"/>  REL HUM </a>
+                        </div>
+                         <div id="paramsrocKeysDiv" style="display:none">
+                        <a class="dropdown-item" id="occupancy1"><input type="checkbox" id="sroc_1" name="checksroc"/>  OCCUPANCY 1 </a>
+                        <a class="dropdown-item" id="occupancy2"><input type="checkbox" id="sroc_2" name="checksroc"/>  OCCUPANCY 2 </a>
+                        <a class="dropdown-item" id="occupancy3"><input type="checkbox" id="sroc_3" name="checksroc"/>  OCCUPANCY 3 </a>
+                        <a class="dropdown-item" id="occupancy4"><input type="checkbox" id="sroc_4" name="checksroc"/>  OCCUPANCY 4 </a>
+                        <a class="dropdown-item" id="oc_temp"><input type="checkbox" id="sroc_5" name="checksroc" /> TEMP  </a>
+                        <a class="dropdown-item" id="oc_relhum"><input type="checkbox" id="sroc_6" name="checksroc" />  REL HUM </a>
+                        </div>
+                            <div id="paramcmKeysDiv" style="display:none">
+                        <a class="dropdown-item" id="current_people_count"><input type="checkbox" id="cm_1" name="checkcm"  onClick="reInitParameters('checkcm',crowd_monitoring_nodes,'CM');" value="CPC"/>  CURR PPL COUNT </a>
+                        <a class="dropdown-item" id="no_of_safe_distance_violations"><input type="checkbox" id="cm_2" name="checkcm"  onClick="reInitParameters('checkcm',crowd_monitoring_nodes,'CM');" value="SDV" />  SAFE DIST VIOL </a>
+                        <a class="dropdown-item" id="no_of_mask_violations"><input type="checkbox" id="cm_3" name="checkcm"  onClick="reInitParameters('checkcm',crowd_monitoring_nodes,'CM');" value="MASK" />  MASK VIOL </a>
+                        <a class="dropdown-item" id="timestamp_start"><input type="checkbox" id="cm_4" name="checkcm"  onClick="reInitParameters('checkcm',crowd_monitoring_nodes,'CM');" value="SRT" />  TIME START </a>
+                        <a class="dropdown-item" id="timestamp_end"><input type="checkbox" id="cm_5" name="checkcm"   onClick="reInitParameters('checkcm',crowd_monitoring_nodes,'CM');" value="END"/> TIME END  </a>
+                        </div>
+                        <div id="paramemKeysDiv" style="display:none">
+                        <a class="dropdown-item" id="rssi"><input type="checkbox" id="em_1" name="checkem"  onClick="reInitParameters('checkem',energy_monitoring_nodes,'EM');" value="RS"/>  RSSI </a>
+                        <a class="dropdown-item" id="r_current"><input type="checkbox" id="em_2" name="checkem"  onClick="reInitParameters('checkem',energy_monitoring_nodes,'EM');" value="R_CURR"/>  R CURRENT </a>
+                        <a class="dropdown-item" id="y_current"><input type="checkbox" id="em_3" name="checkem"  onClick="reInitParameters('checkem',energy_monitoring_nodes,'EM');" value="Y_CURR"/>  Y CURRENT </a>
+                        <a class="dropdown-item" id="b_current"><input type="checkbox" id="em_4" name="checkem"  onClick="reInitParameters('checkem',energy_monitoring_nodes,'EM');" value="B_CURR"/>  B CURRENT </a>
+                        <a class="dropdown-item" id="r_voltage"><input type="checkbox" id="em_5" name="checkem"  onClick="reInitParameters('checkem',energy_monitoring_nodes,'EM');" value="R_VOLT"/>  R VOLTAGE </a>
+                        <a class="dropdown-item" id="y_voltage"><input type="checkbox" id="em_6" name="checkem"  onClick="reInitParameters('checkem',energy_monitoring_nodes,'EM');" value="Y_VOLT"/>  Y VOLTAGE </a>
+                        <a class="dropdown-item" id="b_voltage"><input type="checkbox" id="em_7" name="checkem"  onClick="reInitParameters('checkem',energy_monitoring_nodes,'EM');" value="B_VOLT"/>  B VOLTAGE </a>
+                        <a class="dropdown-item" id="em_power_factor"><input type="checkbox" id="em_8" name="checkem"  onClick="reInitParameters('checkem',energy_monitoring_nodes,'EM');" value="EM_PF"/>  POWER FACTOR </a>
+                        <a class="dropdown-item" id="em_frequency"><input type="checkbox" id="em_9" name="checkem"  onClick="reInitParameters('checkem',energy_monitoring_nodes,'EM');" value="EM_FREQ"/>  FREQUENCY </a>
+                        <a class="dropdown-item" id="apparent_power"><input type="checkbox" id="em_10" name="checkem"  onClick="reInitParameters('checkem',energy_monitoring_nodes,'EM');" value="AP"/>  APPARENT POWER </a>
+                        <a class="dropdown-item" id="real_power"><input type="checkbox" id="em_11" name="checkem"  onClick="reInitParameters('checkem',energy_monitoring_nodes,'EM');" value="RP"/>  REAL POWER </a>
+                        <a class="dropdown-item" id="energy_consumption"><input type="checkbox" id="em_12" name="checkem"  onClick="reInitParameters('checkem',energy_monitoring_nodes,'EM');" value="EC"/>  ENERGY CONSUMPTION </a>
+                        <a class="dropdown-item" id="reactive_energy_lead"><input type="checkbox" id="em_13" name="checkem"  onClick="reInitParameters('checkem',energy_monitoring_nodes,'EM');" value="LEAD"/>  REACTIVE ENERGY LEAD </a>
+                        <a class="dropdown-item" id="reactive_energy_lag"><input type="checkbox" id="em_14" name="checkem"  onClick="reInitParameters('checkem',energy_monitoring_nodes,'EM');" value="LAG"/>  REACTIVE ENERGY LAG </a>
+                        <a class="dropdown-item" id="total_energy_consumption"><input type="checkbox" id="em_15" name="checkem"  onClick="reInitParameters('checkem',energy_monitoring_nodes,'EM');" value="TTL_EC"/>  TOTAL ENERGY CONSUMPTION </a>
+                        </div>
+
+                             <div id="paramslKeysDiv" style="display:none">
+                                 <div class="scroll">
+                        <a class="dropdown-item" id="eac_today"><input type="checkbox" id="sl_1" name="checksl"  onClick="reInitParameters('checksl',solar_nodes,'SL');" value="EAC"  />  EAC TODAY </a>
+                        <a class="dropdown-item" id="frequency"><input type="checkbox"  id="sl_7" name="checksl"  onClick="reInitParameters('checksl',solar_nodes,'SL');" value="FREQ" /> FREQ  </a>
+                        <a class="dropdown-item" id="active_power"><input type="checkbox"  id="sl_3" name="checksl"  onClick="reInitParameters('checksl',solar_nodes,'SL');" value="AP"  />  ACTIVE PWR </a>
+                        <a class="dropdown-item" id="power_factor"><input type="checkbox"  id="sl_8" name="checksl"  onClick="reInitParameters('checksl',solar_nodes,'SL');" value="PF" />  PWR FACT </a>
+                        <a class="dropdown-item" id="eac_total"><input type="checkbox"  id="sl_2" name="checksl"  onClick="reInitParameters('checksl',solar_nodes,'SL');" value="EAC_TTL" />  EAC TOTAL </a>
+                        <a class="dropdown-item" id="voltage_rs"><input type="checkbox"  id="sl_4" name="checksl"  onClick="reInitParameters('checksl',solar_nodes,'SL');" value="RS"  />  VOLT RS </a>
+                        <a class="dropdown-item" id="voltage_st"><input type="checkbox"  id="sl_5" name="checksl"  onClick="reInitParameters('checksl',solar_nodes,'SL');" value="ST" />  VOLT ST </a>
+                        <a class="dropdown-item" id="voltage_tr"><input type="checkbox"  id="sl_6" name="checksl"  onClick="reInitParameters('checksl',solar_nodes,'SL');" value="TR" />  VOLT TR </a>
+                        <a class="dropdown-item" id="voltage1"><input type="checkbox"  id="sl_9" name="checksl"   onClick="reInitParameters('checksl',solar_nodes,'SL');" value="V1"/>  VOLT 1 </a>
+                        <a class="dropdown-item" id="current1"><input type="checkbox"  id="sl_10" name="checksl" onClick="reInitParameters('checksl',solar_nodes,'SL');" value="C1"/>  CURR 1 </a>
+                        <a class="dropdown-item" id="power1"><input type="checkbox"  id="sl_11" name="checksl"onClick="reInitParameters('checksl',solar_nodes,'SL');" value="P1"/>   PWR 1 </a>
+                        <a class="dropdown-item" id="voltage2"><input type="checkbox"  id="sl_12" name="checksl"   onClick="reInitParameters('checksl',solar_nodes,'SL');" value="V2"/>  VOLT 2 </a>
+                        <a class="dropdown-item" id="current2"><input type="checkbox"  id="sl_13" name="checksl" onClick="reInitParameters('checksl',solar_nodes,'SL');" value="C2"/>  CURR 2 </a>
+                        <a class="dropdown-item" id="power2"><input type="checkbox"  id="sl_14" name="checksl" onClick="reInitParameters('checksl',solar_nodes,'SL');" value="P2"/>  PWR 2 </a>
+                        <a class="dropdown-item" id="voltage3"><input type="checkbox"  id="sl_15" name="checksl"   onClick="reInitParameters('checksl',solar_nodes,'SL');" value="V3"/>   VOLT 3 </a>
+                        <a class="dropdown-item" id="current3"><input type="checkbox"  id="sl_16" name="checksl" onClick="reInitParameters('checksl',solar_nodes,'SL');" value="C3"/>  CURR 3 </a>
+                        <a class="dropdown-item" id="power3"><input type="checkbox"  id="sl_17" name="checksl" onClick="reInitParameters('checksl',solar_nodes,'SL');" value="P3"/>  PWR 3 </a>
+                        <a class="dropdown-item" id="pv1_voltage"><input type="checkbox"  id="sl_18" name="checksl" onClick="reInitParameters('checksl',solar_nodes,'SL');" value="PV1_V"/>  PV1 VOLT  </a>
+                        <a class="dropdown-item" id="pv1_current"><input type="checkbox"  id="sl_19" name="checksl" onClick="reInitParameters('checksl',solar_nodes,'SL');" value="PV1_C"/>  PV1 CURR </a>
+                        <a class="dropdown-item" id="pv1_power"><input type="checkbox"  id="sl_20" name="checksl" onClick="reInitParameters('checksl',solar_nodes,'SL');" value="PV1_P"/>  PV1 PWR </a>
+                        <a class="dropdown-item" id="pv2_voltage"><input type="checkbox"  id="sl_21" name="checksl" onClick="reInitParameters('checksl',solar_nodes,'SL');" value="PV2_V"/>  PV2 VOLT  </a>
+                        <a class="dropdown-item" id="pv2_current"><input type="checkbox"  id="sl_22" name="checksl" onClick="reInitParameters('checksl',solar_nodes,'SL');" value="PV2_C"/>  PV2 CURR </a>
+                        <a class="dropdown-item" id="pv2_power"><input type="checkbox"  id="sl_23" name="checksl" onClick="reInitParameters('checksl',solar_nodes,'SL');" value="PV2_P"/>  PV2 PWR </a>
+                        <a class="dropdown-item" id="pv3_voltage"><input type="checkbox"  id="sl_24" name="checksl" onClick="reInitParameters('checksl',solar_nodes,'SL');" value="PV3_V"/>  PV3 VOLT  </a>
+                        <a class="dropdown-item" id="pv3_current"><input type="checkbox"  id="sl_25" name="checksl" onClick="reInitParameters('checksl',solar_nodes,'SL');" value="PV3_C"/>  PV3 CURR </a>
+                        <a class="dropdown-item" id="pv3_power"><input type="checkbox"  id="sl_26" name="checksl" onClick="reInitParameters('checksl',solar_nodes,'SL');" value="PV3_P"/>  PV3 PWR </a>
+                        <a class="dropdown-item" id="pv4_voltage"><input type="checkbox"  id="sl_27" name="checksl" onClick="reInitParameters('checksl',solar_nodes,'SL');" value="PV4_V"/>  PV4 VOLT  </a>
+                        <a class="dropdown-item" id="pv4_current"><input type="checkbox"  id="sl_28" name="checksl" onClick="reInitParameters('checksl',solar_nodes,'SL');" value="PV4_C"/>  PV4 CURR </a>
+                        <a class="dropdown-item" id="pv4_power"><input type="checkbox"  id="sl_29" name="checksl" onClick="reInitParameters('checksl',solar_nodes,'SL');" value="PV4_P"/>  PV4 PWR </a>
+                        <a class="dropdown-item" id="pv5_voltage"><input type="checkbox"  id="sl_30" name="checksl" onClick="reInitParameters('checksl',solar_nodes,'SL');" value="PV5_V"/>  PV5 VOLT  </a>
+                        <a class="dropdown-item" id="pv5_current"><input type="checkbox"  id="sl_31" name="checksl" onClick="reInitParameters('checksl',solar_nodes,'SL');" value="PV5_C"/>  PV5 CURR </a>
+                        <a class="dropdown-item" id="pv5_power"><input type="checkbox"  id="sl_32" name="checksl" onClick="reInitParameters('checksl',solar_nodes,'SL');" value="PV5_P"/>  PV5 PWR </a>
+                        <a class="dropdown-item" id="pv6_voltage"><input type="checkbox"  id="sl_33" name="checksl" onClick="reInitParameters('checksl',solar_nodes,'SL');" value="PV6_V"/>  PV6 VOLT  </a>
+                        <a class="dropdown-item" id="pv6_current"><input type="checkbox"  id="sl_34" name="checksl" onClick="reInitParameters('checksl',solar_nodes,'SL');" value="PV6_C"/>  PV6 CURR </a>
+                        <a class="dropdown-item" id="pv6_power"><input type="checkbox"  id="sl_35" name="checksl" onClick="reInitParameters('checksl',solar_nodes,'SL');" value="PV6_P"/>  PV6 PWR </a>
+                                 </div>
+                        </div>
+<!--                        <button id="parameterDone">Done</button>-->
+                      </div>
+                    </li>
+<!--                    parameters end-->
+
+                    <li class="nav-item dropdown btnstyle">
+                        <a class="nav-link dropdown-toggle" href="#" id="currentviewtype" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            BUILDING VIEW
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink" id="listofviews">
+                            <a class="dropdown-item" href="/loadmaps" id="map_view">MAP VIEW</a>
+                            <a class="dropdown-item" href="/building" id="building_view">BUILDING VIEW</a>
+                            <a class="dropdown-item" href="/home" id="grafana_view_home">SUMMARY VIEW</a>
+                            <a class="dropdown-item" href="/3d" id="3d_view">3D VIEW</a>
+                            <!-- <a class="dropdown-item" href="/wisun_view">WISUN DEPLOYMENT</a> -->
+			</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </nav>
+    <div>
+<!--        {% leaflet_map "map" callback="window.mapModify" %}-->
+    </div>
+    <!-- Modal -->
+<div class="modal fade" style="padding-top: 80px;" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitle">Graph</h5>
+        <button type="button" class="btn-close" id='graph-close-button' data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <canvas id="myChart" width="2500" height="1600"></canvas>
+        <div class="controls">
+          <p>
+            Parameter:
+            <select name="chartField" id="chartField" onchange="controlChangeCall()">
+            </select>
+            Range:
+            <select name="range" id="range" onchange="rangeChangeCall()">
+              <option value="day">Today</option>
+              <option value="week" selected>This Week</option>
+              <option value="month">This Month</option>
+              <option value="year">This Year</option>
+              <option value="allTime">All Time</option>
+            </select>
+            Grouping:
+            <select name="interval" id="interval" onchange="controlChangeCall()">
+            </select>
+            <select name="dataGrouping" id="dataGrouping" onchange="controlChangeCall()">
+              <option value="avg" selected>Average</option>
+              <option value="min">Minimum</option>
+              <option value="max">Maximum</option>
+              <option value="sum">Sum</option>
+            </select>
+          </p>
+          <p>
+            <select name="additionNode" id="additionNode">
+            </select>
+            <button type="button" class="btn btn-primary" value="AddNode" onclick="addNodeCall(current_selected_vertical.toUpperCase(), popupNode, 'addNode')">Add Node</button>
+            <select name="additionContext" id="additionContext">
+              <option value="avg" selected>Average</option>
+              <option value="min">Minimum</option>
+              <option value="max">Maximum</option>
+              <option value="sum">Sum</option>
+            </select>
+            <button type="button" class="btn btn-success" value="AddContext" onclick="addContextCall(current_selected_vertical.toUpperCase(), popupNode, 'addNode')">Add Context</button>
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+          <a id="downloadurl"></a>
+        <button type="button" class="btn btn-primary" onclick="return downloadJson();" >Save as JSON</button>
+        <button type="button" class="btn btn-success" onclick="return downloadCsv();" >Save as CSV</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+     <div id="map"></div>
+    <p><a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a></p>
+    <script>
+
+	var map = L.map('map', {
+		crs: L.CRS.Simple,
+		center: [0, 0],
+		zoom: 1
+	});
+	var bounds = [[0,0], [980,1900]];
+	var image = L.imageOverlay('/dashboard/static/images/building_view.jpg', bounds).addTo(map);
+
+	map.fitBounds(bounds);
+
+
+</script>
+
+
+    <script>
+
+
+
+defaultParams('checkair');
+defaultParams('checkwd');
+defaultParams('checkwf');
+defaultParams('checkwe');
+defaultParams('checksrac');
+defaultParams('checksl');
+defaultParams('checkcm');
+defaultParams('checkem');
+
+smart('checksrem');
+smart('checksraq');
+
+
+limitFour("air");
+limitFour("wd");
+limitFour("wf");
+limitFour("we");
+limitFour("srac");
+limitFour("sraq");
+limitFour("sroc");
+limitFour("srem");
+limitFour("cm");
+limitFour("em");
+limitFour("sl");
+
+
+
+
+
+
+
+
+document.getElementById('air_quality').addEventListener("click", defaultParams);
+document.getElementById('parameterbody').innerHTML = '<img src="/dashboard/static/images/icon/air/air1_v2.png" width="20", height=20> <span style="color:grey"">PM25 </span>&nbsp' + '<img src="/dashboard/static/images/icon/air/air2_v2.png" width="20", height=20> <span style="color:grey"">PM10 </span>&nbsp' + '<img src="/dashboard/static/images/icon/air/air3_v2.png" width="20", height=20> <span style="color:grey"">Temp </span>&nbsp' + '<img src="/dashboard/static/images/icon/air/air4_v2.png" width="20", height=20> <span style="color:grey"">rHum </span>&nbsp';
+console.log("boday", document.getElementById('parameterbody').innerHTML);
+var checkboxGlob=[];
+
+function mapCallback(mapdata, options) {
+            console.log("Map callback", mapdata, options);
+            // window.mapModify(mapdata, options);
+}
+
+console.log("script started")
+console.log("output=", global_nodes)
+output = global_nodes
+var circle_global = [];
+var labelCircle_global = [];
+var newpopupObj = {};
+var circleObj = {};
+// <!--        // Initialize map-->
+// <!--        var map = L.map('map');-->
+// <!--        map.on('load', mapCallback);-->
+
+// <!--        map.setView([17.445369,78.349937], 20);-->
+// <!--        L.tileLayer('https://api.maptiler.com/maps/streets/256/{z}/{x}/{y}.png?key=2SC3PDKYzaj06H8OwheO', {-->
+// <!--            attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',-->
+// <!--        }).addTo(map);-->
+
+// <!--&lt;!&ndash;        output = debugDataForGraph;&ndash;&gt;-->
+// <!--        // add layergroup-->
+// <!--        // add common func here-->
+        initialize(output, "AQ");
+
+        function reInitParameters(name,response, type){
+            checkboxClick(name);
+            for (var i = 0; i < response.length; i++) {
+// <!--                console.log("resp",response[i], response.length);-->
+//                 //get popup content
+//                 set=getPopupContent(response[i], type);
+//                 content = set
+// 		    // send it to newpopup.setcontent
+
+//                 popup = newpopupObj[response[i].node_id];
+//                 console.log('TESTING ISSUE',response[i].node_id,set);
+
+//                 popup.setContent(set);
+// <!--                console.log('reponse of i',response[i].node_id, newpopupObj);-->
+		
+		blank_content = `<div class="flex-container"><div class="vl"></div> <div class="vr"></div> <a href="#" data-bs-toggle="modal" data-bs-target="#myModal" onclick = "return popupClick('`+type+`', '`+response[i].node_id+`');"> <span class="link"></span> </a></div>`
+
+                if(content != blank_content) {
+                        circleObj[response[i].node_id].openPopup();
+                }
+                else {
+                        circleObj[response[i].node_id].closePopup();
+                }
+            }
+        }
+
+
+        function initialize(response, type) {
+
+            graphCloseButton = document.getElementById('graph-close-button');
+	    if(graphCloseButton) graphCloseButton.click();
+            newpopupObj = {};
+            circleObj = {};
+            for (var i = 0; i < response.length; i++) {
+                // console.log("name=",response[i], type)
+                // console.log("Content=", getPopupContent(response[i], type))
+                content = getPopupContent(response[i], type);
+		var newpopup = L.popup({
+                    closeOnClick: false,
+                    autoClose: false
+                }).setContent(getPopupContent(response[i], type));
+                var popup2 = L.popup({
+                      closeOnClick: false,
+                      autoClose: false
+                    }).setContent( response[i].name );
+                console.log('OBJ',newpopupObj);
+                newpopupObj[response[i].node_id] = newpopup;
+
+
+                var customOptions = {  'width': '600', 'className' : 'popupCustom' };
+                var customOptions2 = {'className': 'custom', offset: [5, 62]}
+
+                // declare before circle
+                longLabel = response[i].ycor //+ 0.00005
+                console.log("ycor Label =", longLabel)
+                labelCircle = L.circle([response[i].xcor, longLabel], { color: "#orange", fillColor: "#FFA500", fillOpacity: 0.0, radius: 8.0, offset: L.point(100, -500)})
+                       .bindPopup(popup2,customOptions2)
+                       .addTo(map).openPopup();
+
+               // console.log(".lat",response[i].xcor)
+               circle = new L.circle([response[i].xcor, response[i].ycor], { color: "#orange", fillColor: "#FFA500", fillOpacity: 0.7, radius: 4.0 })
+                       .bindPopup(newpopup,customOptions)
+                       .addTo(map);
+
+		blank_content = `<div class="flex-container"><div class="vl"></div> <div class="vr"></div> <a href="#" data-bs-toggle="modal" data-bs-target="#myModal" onclick = "return popupClick('`+type+`', '`+response[i].node_id+`');"> <span class="link"></span> </a></div>`
+
+		if(content != blank_content) circle.openPopup();
+
+                circle.on('mouseover', function (e) {
+                    this.openPopup();
+                });
+
+                circle.on('click', function(e){
+                    this.openPopup();
+                });
+
+                // not here circle_global = [];
+                circle_global.push(circle);
+                labelCircle_global.push(labelCircle);
+		circleObj[response[i].node_id] = circle;
+
+            }
+       }
+
+        document.getElementById('air_quality').addEventListener("click", reInitMarkers);
+        document.getElementById('water_distribution').addEventListener("click", reInitMarkers);
+        document.getElementById('water_flow').addEventListener("click", reInitMarkers);
+        //document.getElementById('smart_room').addEventListener("click", reInitMarkers);
+        document.getElementById('sr_ac').addEventListener("click", reInitMarkers);
+        document.getElementById('sr_em').addEventListener("click", reInitMarkers);
+        document.getElementById('sr_oc').addEventListener("click", reInitMarkers);
+        document.getElementById('sr_aq').addEventListener("click", reInitMarkers);
+        document.getElementById('crowd-monitoring').addEventListener("click", reInitMarkers);
+        document.getElementById('energy-monitoring').addEventListener("click", reInitMarkers);
+        document.getElementById('Solar').addEventListener("click", reInitMarkers);
+        document.getElementById('WeatherStation').addEventListener("click", reInitMarkers);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+<!--    <script>-->
+<!--    $(document).ready(function(){-->
+<!--      $('.dropdown-submenu a.test').on("click", function(e){-->
+<!--        $(this).next('ul').toggle();-->
+<!--        e.stopPropagation();-->
+<!--        e.preventDefault();-->
+<!--      });-->
+<!--    });-->
+<!--    </script>-->
+
+
+
+    <!-- Footer Area -->
+<div class="footer-copyright-area shadow-lg">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="footer-copy-right">
+                    <p>SCRC, IIIT Hyderabad  </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

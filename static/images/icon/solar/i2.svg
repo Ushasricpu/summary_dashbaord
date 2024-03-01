@@ -1,0 +1,23 @@
+<svg width="498.338" height="498.338" xmlns="http://www.w3.org/2000/svg">
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="514" width="514" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g id="svg_1">
+   <polygon fill="#bfbf00" id="svg_2" points="194.1,229.708 186.293,336.651 311.396,336.651 303.851,229.708  "/>
+   <polygon fill="#bfbf00" id="svg_3" points="294.328,94.723 288.47,11.68 210.017,11.68 203.954,94.723  "/>
+   <polygon fill="#bfbf00" id="svg_4" points="179.937,11.68 74.34,11.68 55.343,94.723 173.875,94.723  "/>
+   <polygon fill="#bfbf00" id="svg_5" points="331.809,199.708 467.011,199.708 449.858,124.723 326.519,124.723  "/>
+   <polygon fill="#bfbf00" id="svg_6" points="341.47,336.651 498.338,336.651 473.874,229.708 333.926,229.708  "/>
+   <polygon fill="#bfbf00" id="svg_7" points="171.685,124.723 48.481,124.723 31.327,199.708 166.211,199.708  "/>
+   <polygon fill="#bfbf00" id="svg_8" points="442.995,94.723 423.998,11.68 318.544,11.68 324.403,94.723  "/>
+   <polygon fill="#bfbf00" id="svg_9" points="296.445,124.723 201.764,124.723 196.29,199.708 301.735,199.708  "/>
+   <polygon fill="#bfbf00" id="svg_10" points="164.021,229.708 24.464,229.708 0,336.651 156.213,336.651  "/>
+   <rect fill="#bfbf00" id="svg_11" height="30" width="320.021" y="456.659" x="88.98"/>
+   <polygon fill="#bfbf00" id="svg_12" points="176.28,426.657 321.701,426.657 311.7,366.651 186.28,366.651  "/>
+  </g>
+ </g>
+</svg>
